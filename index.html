@@ -203,9 +203,17 @@ body {
 .rstep { border-left: 2px solid var(--border); padding-left: 16px; position: relative; }
 .rstep::before { content: ''; position: absolute; left: -6px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--border2); }
 .rstep.done::before { background: var(--brand); }
+.rstep.blocked::before { background: var(--border2); }
+.rstep.missing::before { background: var(--red); }
 .rstep .rlabel { font-size: 11px; color: var(--brand-dk); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.rstep.blocked .rlabel { color: var(--text4); }
+.rstep.missing .rlabel { color: var(--red); }
 .rstep h4 { margin: 6px 0 6px; font-size: 14px; color: var(--text); }
 .rstep p { color: var(--text3); font-size: 12.5px; }
+.rstep .rdate { display: block; font-size: 11px; color: var(--text4); margin-top: 4px; }
+.plan-list { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.plan-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text2); line-height: 1.7; }
+.plan-list li .n { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-bg); border: 1px solid #a7f3d0; color: var(--brand-dk); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
 
 code, .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; background: var(--bg-subtle); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; color: var(--brand-dk); }
 
@@ -240,11 +248,12 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
     <a href="#roadmap">검증·로드맵</a>
   </nav>
   <div class="site-nav-highlight">
+    <a href="#roadmap"><span class="dot"></span><span class="label-text">진행 현황(1–6)</span></a>
     <a href="https://github.com/Openhash-Gopang/hondi" target="_blank" rel="noopener"><span class="dot"></span><span class="label-text">구현 코드(hondi)</span></a>
   </div>
 </div>
 <div class="site-strip">
-  <a class="site-strip-text" href="https://github.com/Openhash-Gopang/hondi" target="_blank" rel="noopener">초안 단계 · sp-catalog.json 미등록 · 아직 이용자에게 서빙되지 않음 · 오픈소스 코드 공개</a>
+  <a class="site-strip-text" href="#roadmap">초안 단계 · SP-24a 아직 비활성(status: pending) · 아직 이용자에게 서빙되지 않음 · 진행 현황 6개 항목 보기 →</a>
   <a class="site-strip-support-btn" href="https://klaw.hondi.net" target="_blank" rel="noopener">K-Law 보러 가기</a>
 </div>
 
@@ -367,26 +376,50 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
 <section class="section" id="roadmap">
   <div class="section-inner">
     <div class="section-tag reveal">Current Status</div>
-    <h2 class="section-title reveal">현재 상태와 <strong>남은 일</strong></h2>
-    <div class="section-body reveal"><p>이 페이지는 소개용이며, 실제 감정평가 서비스는 아직 운영 중이 아닙니다.</p></div>
+    <h2 class="section-title reveal">진행 현황 <strong>1–6</strong></h2>
+    <div class="section-body reveal"><p>이 페이지는 소개용이며, 실제 감정평가 서비스는 아직 운영 중이 아닙니다. 아래 6개 항목은 2026-09-28 기준, hondi/estate 저장소를 직접 확인해 정리한 상태입니다 — 낙관적으로 반올림하지 않았습니다.</p></div>
 
     <div class="roadmap-grid reveal">
       <div class="rstep done">
-        <div class="rlabel">완료</div>
+        <div class="rlabel">1 · 완료</div>
         <h4>3단계 계산 엔진 + 테스트</h4>
-        <p><code>hondi-staged-valuation.js</code>, 유닛 테스트 27건(전체 120건 통과), hondi 저장소에 구현됨.</p>
+        <p><code>hondi-staged-valuation.js</code>, 유닛 테스트 27건 신규(전체 120건 통과), hondi 저장소 main에 병합됨.</p>
+        <span class="rdate">PR #475 · commit ac68a342</span>
       </div>
-      <div class="rstep">
-        <div class="rlabel">초안 — 미배선</div>
-        <h4>SP-24a 증거 수집 프롬프트</h4>
-        <p>웹 검색으로 지수·인구·정비구역 자료를 모으는 AI 지시문. sp-catalog.json 미등록, 라우팅 미연결.</p>
+      <div class="rstep missing">
+        <div class="rlabel">2 · 미완</div>
+        <h4>estate 저장소 GitHub Pages</h4>
+        <p>이 소개 페이지 자체는 커밋·푸시됐지만, estate.hondi.net(또는 GitHub Pages 기본 도메인)이 아직 활성화되지 않아 배포 URL이 404를 반환합니다.</p>
       </div>
-      <div class="rstep">
-        <div class="rlabel">예정</div>
+      <div class="rstep done">
+        <div class="rlabel">3 · 완료</div>
+        <h4>SP-24a 레지스트리 등록</h4>
+        <p>gwp-registry.js·sp-catalog.json에 <code>status: 'pending'</code>으로 등록됨. call-ai.js 디스패치 배선은 실거래 자료·등기부 확인 경로가 검증되기 전까지 의도적으로 포함하지 않았습니다.</p>
+        <span class="rdate">commit 2b9be8c3</span>
+      </div>
+      <div class="rstep blocked">
+        <div class="rlabel">4 · 착수 불가</div>
         <h4>표본 밖 백테스트</h4>
-        <p>K-Law 방식의 검증 규약에 따라 시간 분리 표본으로 상수를 보정. 채택 기준값은 아직 비어 있습니다.</p>
+        <p>저장소 전체를 검색했지만 실제 정산 완료 사건(추정가·실제 매각가 쌍) 데이터가 하나도 없습니다. 미완이 아니라, 지금은 착수할 데이터 자체가 없는 상태입니다.</p>
+      </div>
+      <div class="rstep blocked">
+        <div class="rlabel">5 · 착수 불가</div>
+        <h4>상수 보정</h4>
+        <p>연변동성 기본값 6%, 지역·개별 σ 가산치 등은 전부 가정값입니다. 4번과 같은 이유로 — 검증 표본이 없어 — 지금은 보정 자체가 불가능합니다.</p>
+      </div>
+      <div class="rstep done">
+        <div class="rlabel">6 · 완료</div>
+        <h4>데이터 출처 URL 구체화</h4>
+        <p>국토부 실거래가·R-ONE·인구통계·서울 정비구역 등 구체적 출처 URL을 SP-24a와 검증 규약 문서에 반영했습니다.</p>
+        <span class="rdate">commit 2b9be8c3</span>
       </div>
     </div>
+
+    <ul class="plan-list reveal">
+      <li><span class="n">1</span><span><strong>estate GitHub Pages 활성화</strong> — 저장소 Settings → Pages에서 main 브랜치를 소스로 지정하면 이 페이지가 실제로 공개됩니다. 지금은 코드만 존재하고 배포되지 않은 상태입니다.</span></li>
+      <li><span class="n">2</span><span><strong>SP-24a 배선은 여전히 보류</strong> — 레지스트리 등록이 끝났어도 call-ai.js 디스패치는 붙이지 않습니다. 실거래 자료 접근·등기부 확인 경로가 실제로 검증되기 전까지는 <code>status: 'pending'</code>으로 유지합니다.</span></li>
+      <li><span class="n">3</span><span><strong>실제 정산 사건이 쌓이기 시작하면</strong> — 그 시점부터 시간 분리(splitByTime) 표본으로 4·5번(백테스트·상수 보정) 착수. 그 전까지는 진행할 수 없습니다 — 데이터가 없는데 상수를 보정하면 그 값은 근거가 아니라 추측이 됩니다.</span></li>
+    </ul>
 
     <div class="callout reveal">
       ⚖️ K-Estate는 법정 감정평가서를 발급하지 않습니다. AI가 계산 참고치를 결정론적으로 산출하되, 등기부 확인·법적 조언이 필요한 권리 해석은 각각 K-Public(kgov)·K-Law 또는 등록 감정평가사·변호사에게 안내합니다.
