@@ -205,6 +205,10 @@ body {
 .rstep.done::before { background: var(--brand); }
 .rstep.blocked::before { background: var(--border2); }
 .rstep.missing::before { background: var(--red); }
+.rstep.partial::before { background: var(--amber); }
+.rstep.held::before { background: var(--blue); }
+.rstep.partial .rlabel { color: #b45309; }
+.rstep.held .rlabel { color: var(--blue); }
 .rstep .rlabel { font-size: 11px; color: var(--brand-dk); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .rstep.blocked .rlabel { color: var(--text4); }
 .rstep.missing .rlabel { color: var(--red); }
@@ -214,6 +218,21 @@ body {
 .plan-list { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .plan-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text2); line-height: 1.7; }
 .plan-list li .n { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-bg); border: 1px solid #a7f3d0; color: var(--brand-dk); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+
+.msub { font-size: 16px; font-weight: 600; color: var(--text); margin: 36px 0 6px; }
+.msub-note { font-size: 12.5px; color: var(--text3); margin-bottom: 12px; }
+.mwrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.mtable { width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 1.65; min-width: 640px; }
+.mtable th { text-align: left; font-size: 11px; letter-spacing: .04em; color: var(--brand-dk); background: var(--brand-bg); padding: 10px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.mtable td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+.mtable tr:last-child td { border-bottom: none; }
+.mtable td.axis { font-weight: 600; color: var(--text); white-space: nowrap; }
+.st { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.st-done { background: var(--brand-bg); color: var(--brand-dk); border: 1px solid #a7f3d0; }
+.st-part { background: var(--amber-lt); color: #b45309; border: 1px solid #fde68a; }
+.st-none { background: var(--bg-subtle); color: var(--text4); border: 1px solid var(--border2); }
+.st-hold { background: var(--blue-lt); color: var(--blue); border: 1px solid #bfdbfe; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 10px 0 0; font-size: 12px; color: var(--text3); align-items: center; }
 
 .register-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: start; margin-top: 24px; }
 
@@ -247,17 +266,18 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
     <a href="#register">물건 등록</a>
     <a href="#search">물건 검색</a>
     <a href="#how">3단계 평가</a>
+    <a href="#methods">방법론 상세</a>
     <a href="#principles">핵심 원칙</a>
     <a href="#example">계산 예시</a>
     <a href="#roadmap">검증·로드맵</a>
   </nav>
   <div class="site-nav-highlight">
-    <a href="#roadmap"><span class="dot"></span><span class="label-text">진행 현황(1–6)</span></a>
+    <a href="#roadmap"><span class="dot"></span><span class="label-text">진행 현황(1–10)</span></a>
     <a href="https://github.com/Openhash-Gopang/hondi" target="_blank" rel="noopener"><span class="dot"></span><span class="label-text">구현 코드(hondi)</span></a>
   </div>
 </div>
 <div class="site-strip">
-  <a class="site-strip-text" href="#roadmap">초안 단계 · SP-24a 아직 비활성(status: pending) · 아직 이용자에게 서빙되지 않음 · 진행 현황 6개 항목 보기 →</a>
+  <a class="site-strip-text" href="#roadmap">초안 단계 · SP-24a 아직 비활성(status: pending) · 아직 이용자에게 서빙되지 않음 · 진행 현황 10개 항목 보기 →</a>
   <a class="site-strip-support-btn" href="https://klaw.hondi.net" target="_blank" rel="noopener">K-Law 보러 가기</a>
 </div>
 
@@ -346,6 +366,7 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
           <li>매수인 인수 부담(선순위 임차보증금 등) → 공정가치에서 차감</li>
           <li>제3자 근저당 → 자산가치는 불변, 대출 담보가치에서만 차감</li>
           <li>등기부 미확인 → "선순위 권리 불명"으로 전체 거부</li>
+          <li>층(floor): 대상 층 ±3층 비교사례가 3건 이상이면 그 사례만 사용, 부족하면 전체 사용 + 불확실성 가산</li>
         </ul>
         <span class="pill reject">미확인 시 거부</span>
       </div>
@@ -364,9 +385,62 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
       </div>
       <div class="metric-cell">
         <div class="label">유닛 테스트</div>
-        <div class="num"><strong>120</strong></div>
-        <div class="sub">전부 통과(신규 27건 포함)</div>
+        <div class="num"><strong>159</strong></div>
+        <div class="sub">settlement 전체 통과(2026-09-30, 층·유형 범위 신규 13건 포함)</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="methods">
+  <div class="section-inner">
+    <div class="section-tag reveal">Methodology v2.0</div>
+    <h2 class="section-title reveal">방법론 <strong>상세</strong></h2>
+    <div class="section-body reveal">
+      <p>hondi 저장소의 <code>docs/kestate/valuation-methodology.md</code>(v2.0, 2026-09-29)를 이 페이지에 옮긴 것입니다. 부동산 가치에 영향을 주는 변수를 전체 지도로 그린 뒤, 각 항목이 <strong>실제로 구현됐는지</strong>를 코드·프롬프트 기준(2026-09-30)으로 표시했습니다. 구현되지 않은 항목은 구현되지 않았다고 그대로 적었습니다.</p>
+      <div class="legend">
+        <span class="st st-done">구현</span> 코드·프롬프트에 반영
+        <span class="st st-part">부분</span> 일부만 반영
+        <span class="st st-none">미반영</span> 아직 없음
+        <span class="st st-hold">보류</span> 근거·설계가 먼저 필요해 의도적으로 미룸
+      </div>
+    </div>
+
+    <h3 class="msub reveal">1. 통상의 3방식과 hondi의 범위</h3>
+    <p class="msub-note reveal">한국은 「감정평가에 관한 규칙」이 물건 종류별로 주방식을 정해 둡니다. hondi는 그중 거래사례비교법 계열의 아파트 매매만 다룹니다.</p>
+    <div class="mwrap reveal"><table class="mtable">
+      <thead><tr><th>방식</th><th>원리</th><th>적합 대상</th><th>hondi 상태</th></tr></thead>
+      <tbody>
+        <tr><td class="axis">거래사례비교법</td><td>유사 거래사례를 사정보정·시점수정·가치형성요인 비교로 조정</td><td>아파트 등 거래가 빈번한 부동산</td><td><span class="st st-part">부분</span> 시점수정·지역요인·개별요인 3단계는 구현. 사정보정(특수 거래 정상화) 단계는 코드에 없음. 아파트 매매 한정</td></tr>
+        <tr><td class="axis">공시지가기준법</td><td>표준지 공시지가 기준, 시점수정·지역요인·개별요인·그 밖의 요인 보정</td><td>토지</td><td><span class="st st-part">부분</span> 조정 순서의 골격만 공유. 용도지역·용적률·개발행위허가 등 토지 평가 자체는 미구현</td></tr>
+        <tr><td class="axis">원가법</td><td>재조달원가 − 감가수정</td><td>신축 건물, 공장·학교 등 특수 목적</td><td><span class="st st-none">미반영</span> 건물 감가수정 로직 없음</td></tr>
+        <tr><td class="axis">수익환원법</td><td>순영업소득(NOI) ÷ 환원율, 또는 DCF</td><td>임대용 상가·오피스·물류센터</td><td><span class="st st-none">미반영</span> NOI·환원율·공실률 추정 로직 없음</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="msub reveal">2. 변수 전체 지도와 구현 상태</h3>
+    <p class="msub-note reveal">변수를 성격이 다른 여섯 축으로 나눠야 "정성 위험은 σ만 키우고, 관측된 값만 중앙 추정을 움직인다"는 원칙을 축마다 다르게 적용할 수 있습니다.</p>
+    <div class="mwrap reveal"><table class="mtable">
+      <thead><tr><th>축</th><th>항목</th><th>처리 방식</th><th>상태</th></tr></thead>
+      <tbody>
+        <tr><td class="axis">A. 거시·시장</td><td>기준금리·주담대 금리, LTV·DTI·DSR, 규제지역 지정, 보유세·양도세, 입주 물량, 미분양</td><td>시점수정 지수에 후행 반영될 뿐 별도 변수 없음. 시장 전체에 작용하므로 대화마다 새로 찾지 않고 플랫폼 공용 지표로 만드는 설계가 필요</td><td><span class="st st-hold">보류</span></td></tr>
+        <tr><td class="axis">B. 지역요인</td><td>대상 지역 대비 비교사례 지역의 가격 수준비</td><td>중앙 추정을 움직이는 유일한 지역 요소. 출처·조회일 있는 관측값일 때만</td><td><span class="st st-done">구현</span></td></tr>
+        <tr><td class="axis">B. 지역요인</td><td>인구 감소, 정비구역 단계(초기·후기), 학교 통폐합, 인프라 축소</td><td>중앙 추정은 그대로 두고 σ만 키움(지역 지수와의 이중계산 방지). 출처·조회일 없으면 채택 안 함. 정비구역의 상방 효과(가격 방향)는 반영하지 않음</td><td><span class="st st-part">부분</span></td></tr>
+        <tr><td class="axis">B. 지역요인</td><td>교통·IC 접근성, 인근 상권, 역세권, 치안, 주요 산업, 개발 호재, 학군 선호도</td><td>신뢰할 만한 공개 출처 조사가 아직 안 됨. 개발 호재는 "확정 단계" 판정 기준을 먼저 정해야 함. 상방 요인은 위험 σ 모델과 성격이 달라 별도 설계 필요</td><td><span class="st st-hold">보류</span></td></tr>
+        <tr><td class="axis">C. 개별 — 물리적 특성</td><td>층수(로열층)</td><td>대상 층 ±3층 비교사례가 3건 이상이면 그 사례만으로 중앙값을 구하고, 부족하면 전체를 쓰되 σ 가산. 층별 프리미엄 계수는 만들지 않음(보정 표본 없음). 대상 층은 출처·조회일 필수. ±3층·최소 3건·σ 값은 가정이며 미보정. 최상층·1층 특수성은 미반영</td><td><span class="st st-part">부분</span></td></tr>
+        <tr><td class="axis">C. 개별 — 물리적 특성</td><td>맹지·도로 미접합</td><td>개별 하자로 제출하면 일반 하자보다 큰 σ 가산</td><td><span class="st st-done">구현</span></td></tr>
+        <tr><td class="axis">C. 개별 — 물리적 특성</td><td>향·조망, 인테리어·리모델링, 평면 타입, 동 위치, 사용승인일(연식), 세대당 주차, 커뮤니티·관리비, 일조·소음</td><td>국토부 실거래 API에 없는 정보가 많아 별도 출처가 필요하거나 이용자에게 직접 물어야 함</td><td><span class="st st-none">미반영</span></td></tr>
+        <tr><td class="axis">D. 개별 — 권리분석</td><td>매수인 인수 부담(대항력 있는 선순위 임차보증금 등), 제3자 근저당</td><td>인수 부담은 공정가치에서 차감. 제3자 근저당은 자산가치는 그대로 두고 대출 담보가치에서만 차감. 등기부 미확인이면 "선순위 권리 불명"으로 전체 거부</td><td><span class="st st-done">구현</span></td></tr>
+        <tr><td class="axis">D. 개별 — 권리분석</td><td>가압류·가처분·유치권</td><td>등기부에서 하나라도 확인되면 순위를 계산하지 않고 전체 거부(K-Law·변호사 상담 안내). 틀린 계산보다 안전한 보수적 선택</td><td><span class="st st-done">구현</span></td></tr>
+        <tr><td class="axis">D. 개별 — 권리분석</td><td>말소기준권리 실제 순위 계산, 전세권·지상권·지역권 유형별 처리</td><td>순위 판정은 법률 검토가 선행돼야 해서 구현하지 않음. 용익물권은 자유 서술 유형으로만 기록</td><td><span class="st st-none">미반영</span></td></tr>
+        <tr><td class="axis">E. 개별 — 임대차</td><td>임차인 존재 여부 → 계약 조건 → 대항력 순서, 상가건물임대차보호법 환산보증금</td><td>SP 프롬프트 지시로만 반영(환산보증금 기준액은 코드에 고정하지 않고 매번 웹 검색). 실제 대화에서 지켜지는지는 실행 검증 전</td><td><span class="st st-part">부분</span></td></tr>
+        <tr><td class="axis">E. 개별 — 임대차</td><td>계약갱신청구권, 권리금 보호</td><td>구현하지 않음</td><td><span class="st st-none">미반영</span></td></tr>
+        <tr><td class="axis">F. 물건 유형</td><td>아파트 매매 외 전부(오피스텔·상가·오피스·토지·단독/다가구·분양권)</td><td>SP-24a가 "아파트 매매만"을 먼저 안내하고, 지원 밖 유형이 제출되면 코드가 값을 내지 않고 범위 밖으로 거부. 유형별 주방식 자체는 없음. 유형 미제출 시 코드는 막지 않아 SP의 준수에 의존</td><td><span class="st st-part">부분</span></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout reveal">
+      여기서 "구현"은 코드·프롬프트에 반영됐다는 뜻이지 정확도가 검증됐다는 뜻이 아닙니다. 표본 밖 백테스트에 쓸 실제 정산 완료 사건 데이터가 없어, σ 가산치·층 창 크기 같은 상수는 전부 가정값이고 보정되지 않았습니다(아래 진행 현황 4·5번 참조).
     </div>
   </div>
 </section>
@@ -411,26 +485,27 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
 <section class="section" id="roadmap">
   <div class="section-inner">
     <div class="section-tag reveal">Current Status</div>
-    <h2 class="section-title reveal">진행 현황 <strong>1–6</strong></h2>
-    <div class="section-body reveal"><p>이 페이지는 소개용이며, 실제 감정평가 서비스는 아직 운영 중이 아닙니다. 아래 6개 항목은 2026-09-28 기준, hondi/estate 저장소를 직접 확인해 정리한 상태입니다 — 낙관적으로 반올림하지 않았습니다.</p></div>
+    <h2 class="section-title reveal">진행 현황 <strong>1–10</strong></h2>
+    <div class="section-body reveal"><p>이 페이지는 소개용이며, 실제 감정평가 서비스는 아직 운영 중이 아닙니다. 아래 10개 항목은 2026-09-30 기준, hondi/estate 저장소를 직접 확인해 정리한 상태입니다 — 낙관적으로 반올림하지 않았습니다.</p></div>
 
     <div class="roadmap-grid reveal">
       <div class="rstep done">
         <div class="rlabel">1 · 완료</div>
         <h4>3단계 계산 엔진 + 테스트</h4>
-        <p><code>hondi-staged-valuation.js</code>, 유닛 테스트 27건 신규(전체 120건 통과), hondi 저장소 main에 병합됨.</p>
+        <p><code>hondi-staged-valuation.js</code>, 최초 반영 때 유닛 테스트 27건 신규, hondi 저장소 main에 병합됨. 현재 settlement 유닛 테스트는 159건 전부 통과합니다.</p>
         <span class="rdate">PR #475 · commit ac68a342</span>
       </div>
-      <div class="rstep missing">
-        <div class="rlabel">2 · 미완</div>
-        <h4>estate 저장소 GitHub Pages</h4>
-        <p>이 소개 페이지 자체는 커밋·푸시됐지만, estate.hondi.net(또는 GitHub Pages 기본 도메인)이 아직 활성화되지 않아 배포 URL이 404를 반환합니다.</p>
+      <div class="rstep done">
+        <div class="rlabel">2 · 완료</div>
+        <h4>estate.hondi.net 공개</h4>
+        <p>estate 저장소가 estate.hondi.net 도메인으로 공개되어 이 페이지가 실제로 열립니다. 2026-09-28 기준 "배포 URL 404 — 미완"이던 항목입니다.</p>
+        <span class="rdate">commit 8895711 (CNAME)</span>
       </div>
       <div class="rstep done">
         <div class="rlabel">3 · 완료</div>
         <h4>SP-24a 레지스트리 등록</h4>
-        <p>gwp-registry.js·sp-catalog.json에 <code>status: 'pending'</code>으로 등록됨. call-ai.js 디스패치 배선은 실거래 자료·등기부 확인 경로가 검증되기 전까지 의도적으로 포함하지 않았습니다.</p>
-        <span class="rdate">commit 2b9be8c3</span>
+        <p>gwp-registry.js·sp-catalog.json에 <code>status: 'pending'</code>으로 등록됨. call-ai.js 디스패치 배선은 의도적으로 포함하지 않았습니다. 격리 실행 검증 도구(<code>sp24a-dry-run.mjs</code>)로 부산 강서구 명지동 아파트 1개 시나리오를 처음부터 끝까지 돌려 봤을 뿐, 다른 지역·유형·선순위 권리가 있는 경우는 아직 못 돌려 봤습니다.</p>
+        <span class="rdate">commit 2b9be8c3 · 실행 검증 2026-09-29</span>
       </div>
       <div class="rstep blocked">
         <div class="rlabel">4 · 착수 불가</div>
@@ -440,7 +515,7 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
       <div class="rstep blocked">
         <div class="rlabel">5 · 착수 불가</div>
         <h4>상수 보정</h4>
-        <p>연변동성 기본값 6%, 지역·개별 σ 가산치 등은 전부 가정값입니다. 4번과 같은 이유로 — 검증 표본이 없어 — 지금은 보정 자체가 불가능합니다.</p>
+        <p>연변동성 기본값 6%, 지역·개별 σ 가산치, 층 비교의 ±3층 창 등은 전부 가정값입니다. 4번과 같은 이유로 — 검증 표본이 없어 — 지금은 보정 자체가 불가능합니다.</p>
       </div>
       <div class="rstep done">
         <div class="rlabel">6 · 완료</div>
@@ -448,12 +523,40 @@ footer .copyright { max-width: 860px; margin: 18px auto 0; color: var(--text4); 
         <p>국토부 실거래가·R-ONE·인구통계·서울 정비구역 등 구체적 출처 URL을 SP-24a와 검증 규약 문서에 반영했습니다.</p>
         <span class="rdate">commit 2b9be8c3</span>
       </div>
+      <div class="rstep partial">
+        <div class="rlabel">7 · 부분 완료</div>
+        <h4>국토부 실거래가 대조 점검</h4>
+        <p>혼디 추정치를 같은 법정동·계약월 실거래 중위값과 대조하는 CLI를 만들었고, 아파트 매매 엔드포인트는 2026-09-29 제주시(50110)로 실제 호출해 검증했습니다(이 과정에서 버그 2건 발견·수정). 나머지 6개 데이터셋(오피스텔·상업업무용·토지·공장창고·전월세)은 엔드포인트와 응답 스키마가 미확인입니다. 사람이 수동으로 돌리는 도구이며 정식 백테스트를 대체하지 않습니다.</p>
+        <span class="rdate">2026-09-29</span>
+      </div>
+      <div class="rstep partial">
+        <div class="rlabel">8 · 라이브 · 검증 초기</div>
+        <h4>물건 검색(SP-24b) · 물건 등록(SP-24d)</h4>
+        <p>두 채팅 위젯이 이 페이지에서 실제로 동작하지만, 실행 검증 도구 없이 배포하고 실사용 관찰로 대신한 상태입니다. 물건 등록은 대화 내용을 화면에 정리해 "복사하기"만 제공하며 <strong>자동 게시되지 않습니다</strong> — 매물을 저장·공개하는 백엔드가 아직 없습니다.</p>
+        <span class="rdate">SP-24b 2026-09-28 · SP-24d 2026-09-30 (PR #476)</span>
+      </div>
+      <div class="rstep held">
+        <div class="rlabel">9 · 미배포 · 의도적 보류</div>
+        <h4>물건 소개서(SP-24c)</h4>
+        <p>매도인·경매 신청자용 소개서 SP와 사진 분석 프롬프트는 작성됐지만 라이브가 아닙니다. ① 사진 분석(비전) 호출 모듈, ② 격리 실행 검증 CLI, ③ call-ai.js 배선을 이 순서로 끝내기 전에는 실사용자 경로를 열지 않습니다. 드론·항공영상 AI 분석은 플랫폼에 없고 저장만 가능합니다.</p>
+        <span class="rdate">2026-09-30</span>
+      </div>
+      <div class="rstep partial">
+        <div class="rlabel">10 · 부분 구현</div>
+        <h4>층 비교 · 물건 유형 범위 가드</h4>
+        <p>방법론 문서의 우선순위 갭 중 두 가지를 반영했습니다. 대상 층 ±3층 비교사례로 좁히고(부족하면 σ 가산), 아파트 매매 외 유형은 값을 내지 않고 범위 밖으로 거부합니다. 유닛 테스트 13건 추가. 실제 LLM 대화에서 SP가 이 규칙을 지키는지는 아직 실행 검증 전이고, 말소기준권리 순위 계산은 법률 검토 선행이라 구현하지 않았습니다.</p>
+        <span class="rdate">2026-09-30</span>
+      </div>
     </div>
 
     <ul class="plan-list reveal">
-      <li><span class="n">1</span><span><strong>estate GitHub Pages 활성화</strong> — 저장소 Settings → Pages에서 main 브랜치를 소스로 지정하면 이 페이지가 실제로 공개됩니다. 지금은 코드만 존재하고 배포되지 않은 상태입니다.</span></li>
-      <li><span class="n">2</span><span><strong>SP-24a 배선은 여전히 보류</strong> — 레지스트리 등록이 끝났어도 call-ai.js 디스패치는 붙이지 않습니다. 실거래 자료 접근·등기부 확인 경로가 실제로 검증되기 전까지는 <code>status: 'pending'</code>으로 유지합니다.</span></li>
-      <li><span class="n">3</span><span><strong>실제 정산 사건이 쌓이기 시작하면</strong> — 그 시점부터 시간 분리(splitByTime) 표본으로 4·5번(백테스트·상수 보정) 착수. 그 전까지는 진행할 수 없습니다 — 데이터가 없는데 상수를 보정하면 그 값은 근거가 아니라 추측이 됩니다.</span></li>
+      <li><span class="n">1</span><span><strong>SP-24a 배선은 여전히 보류</strong> — 레지스트리 등록과 1건의 시나리오 완주만으로 <code>status</code>를 바꾸지 않습니다. 등기부가 실제로 확보된 경우, 다른 지역·물건 유형, 선순위 권리가 있는 경우를 더 돌려 본 뒤 사람이 판단합니다.</span></li>
+      <li><span class="n">2</span><span><strong>실제 정산 사건이 쌓이기 시작하면</strong> — 그 시점부터 시간 분리(splitByTime) 표본으로 4·5번(백테스트·상수 보정) 착수. 데이터가 없는데 상수를 보정하면 그 값은 근거가 아니라 추측이 됩니다.</span></li>
+      <li><span class="n">3</span><span><strong>매물 게시 DB 설계</strong> — 지금은 "복사하기"가 물건 등록의 유일한 전달 경로입니다. 실제 등록 백엔드를 만들 때 이 갭을 해소해야 합니다.</span></li>
+      <li><span class="n">4</span><span><strong>국토부 나머지 6개 데이터셋 실호출 검증</strong> — 문서나 통념으로 필드명을 채우지 않고, 아파트 매매 때처럼 실제 호출로 응답 필드를 확인한 뒤에 켭니다.</span></li>
+      <li><span class="n">5</span><span><strong>물리적 개별요인 나머지</strong> — 향·조망·리모델링·연식 등은 관측 가능한 출처를 먼저 정해야 하고, 출처 없이 추정해 넣지 않습니다.</span></li>
+      <li><span class="n">6</span><span><strong>SP-24c 남은 3단계</strong> — 비전 호출 모듈 → 격리 실행 검증 CLI → 배선 순서를 지킵니다.</span></li>
+      <li><span class="n">7</span><span><strong>말소기준권리 순위 계산</strong> — 법률 검토가 끝나기 전에는 시도하지 않고, 지금처럼 확인되면 전체 거부합니다.</span></li>
     </ul>
 
     <div class="callout reveal">
